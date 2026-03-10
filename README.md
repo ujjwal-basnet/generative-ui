@@ -25,8 +25,8 @@ Instead of listing products as text, it renders interactive product cards with A
 | Folder | Stack | Status |
 |--------|-------|--------|
 | `backend/` + `frontend/` | LangGraph + LangChain + Next.js (SSE) | ✅ Done |
-| `tool_ui_chatbot/` | LangChain + Gemini + FastAPI | ✅ Done |
-| `copilot-ui/` | CopilotKit + LangChain | 🔜 Coming |
+| `tool_ui_chatbot/` | LangChain + Gemini + FastAPI | 🔜 working |
+| `copilot-ui/` | CopilotKit + LangChain | 🔜 working |
 
 ---
 
