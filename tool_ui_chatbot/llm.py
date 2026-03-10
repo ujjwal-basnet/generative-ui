@@ -1,10 +1,10 @@
 # tool_ui_chatbot/llm.py
 import os
 from dotenv import load_dotenv
-
+from langchain_openai import ChatOpenAI
 load_dotenv()
 
-from langchain_google_genai import ChatGoogleGenerativeAI
+# from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, SystemMessage, ToolMessage
 
 from tools import make_tools, get_cart_data, _carts  # _carts only for count fallback
@@ -29,11 +29,13 @@ _histories = {}
 
 
 def _build_llm(session_tools):
-    return ChatGoogleGenerativeAI(
-        model="gemini-2.5-flash",
-        google_api_key=os.getenv("GEMINI_API_KEY"),
-        temperature=0.3,
-    ).bind_tools(session_tools)
+    # chat model from OpenRouter
+    return ChatOpenAI(
+    api_key=os.getenv("OPENROUTER_API_KEY"),
+    base_url="https://openrouter.ai/api/v1",
+    model="stepfun/step-3.5-flash:free",
+
+).bind_tools(session_tools)
 
 
 def _get_history(session_id: str):
