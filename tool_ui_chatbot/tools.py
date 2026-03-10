@@ -101,3 +101,11 @@ def make_tools(session_id: str):
         return f"🛒 Your cart has {data['count']} items (total ${data['total']:.2f}). The interactive widget below shows everything."
 
     return [add_to_cart, view_cart]
+
+
+    @tool
+    def list_products() -> List[Dict]:
+        """Return all available products for display in the UI."""
+        return PRODUCTS
+
+    return [add_to_cart, view_cart, list_products]
