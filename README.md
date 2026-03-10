@@ -4,6 +4,10 @@
 
 ---
 
+
+https://github.com/user-attachments/assets/206e08fc-729a-457f-9b5d-a4b14beac537
+
+
 ## What is Generative UI?
 
 Traditional chatbots return text. Generative UI connects AI tool results directly to UI components:
