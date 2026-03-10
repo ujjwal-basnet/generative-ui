@@ -48,6 +48,7 @@ def run_agent(session_id: str, user_message: str) -> dict:
     history.append(HumanMessage(content=user_message))
 
     view_cart_called = False
+    products_to_show = None  # <-- collect products
 
     while True:
         response = llm.invoke(history)
@@ -57,11 +58,13 @@ def run_agent(session_id: str, user_message: str) -> dict:
             break
 
         for tc in response.tool_calls:
-            if tc["name"] == "view_cart":
-                view_cart_called = True
-
             tool_fn = tool_map[tc["name"]]
             result = tool_fn.invoke(tc["args"])
+
+            if tc["name"] == "view_cart":
+                view_cart_called = True
+            elif tc["name"] == "list_products":
+                products_to_show = result  # <-- store products
 
             history.append(
                 ToolMessage(
@@ -75,7 +78,6 @@ def run_agent(session_id: str, user_message: str) -> dict:
         cart_data = get_cart_data(session_id)
         cart_count = cart_data["count"]
     else:
-        # Still compute count for badge
         temp = get_cart_data(session_id)
         cart_data = None
         cart_count = temp["count"]
@@ -84,4 +86,5 @@ def run_agent(session_id: str, user_message: str) -> dict:
         "text": response.content,
         "cart_data": cart_data,
         "cart_count": cart_count,
+        "products": products_to_show,  # <-- frontend will render grid if available
     }
