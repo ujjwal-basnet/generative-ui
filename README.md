@@ -1,4 +1,4 @@
-# chat-to-ui
+# generative-ui
 
 > A collection of projects exploring **Generative UI** — where AI tool calls render interactive UI instead of plain text.
 
