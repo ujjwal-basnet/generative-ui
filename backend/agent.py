@@ -4,8 +4,20 @@ from langgraph.prebuilt import create_react_agent
 import asyncio
 from .schemas import WeatherInput, WeatherData, ProductInput, ProductData, AddToCartInput, CartConfirmation, CartItem
 from typing import List, Tuple
+from dotenv import load_dotenv 
+import os 
+load_dotenv()
 
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.2, streaming=True)
+
+
+llm = ChatOpenAI(
+    api_key=os.getenv("OPENROUTER_API_KEY"),
+    base_url="https://openrouter.ai/api/v1",
+    model="stepfun/step-3.5-flash:free",
+)
+
+
+
 
 _cart: dict[str, CartItem] = {}
 
