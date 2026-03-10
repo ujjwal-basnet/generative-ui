@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopBot • Modern Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --apple-blue: #0071e3;
+        }
+        
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        
+        .chat-container {
+            max-width: 680px;
+            margin: 40px auto;
+            background: #f9f9f9;
+            border-radius: 32px;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            height: 92vh;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #e5e5e5;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, #111827, #1f2937);
+            color: white;
+            padding: 20px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(20px);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .cart-icon:hover {
+            transform: scale(1.08);
+        }
+        
+        .badge {
+            position: absolute;
+            top: -4px;
+            right: -6px;
+            background: #ef4444;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            min-width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3);
+        }
+        
+        .messages {
+            flex: 1;
+            padding: 32px 28px;
+            overflow-y: auto;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            scrollbar-width: thin;
+            scrollbar-color: #e2e8f0 #f8fafc;
+        }
+        
+        .msg-row {
+            display: flex;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .bot { justify-content: flex-start; }
+        .user { justify-content: flex-end; }
+        
+        .bubble {
+            padding: 16px 22px;
+            border-radius: 22px;
+            max-width: 78%;
+            font-size: 15.5px;
+            line-height: 1.55;
+            box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.08);
+        }
+        
+        .bot .bubble {
+            background: white;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .user .bubble {
+            background: var(--apple-blue);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .typing-row .bubble {
+            background: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 20px;
+        }
+        
+        .input-area {
+            padding: 20px 28px;
+            background: white;
+            border-top: 1px solid #e5e5e7;
+        }
+        
+        #user-input {
+            flex: 1;
+            padding: 18px 24px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 9999px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.2s;
+        }
+        
+        #user-input:focus {
+            border-color: var(--apple-blue);
+            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
+        }
+        
+        #send-btn {
+            background: var(--apple-blue);
+            color: white;
+            border: none;
+            width: 52px;
+            height: 52px;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        #send-btn:hover {
+            background: #0066cc;
+            transform: scale(1.05);
+        }
+        
+        /* Cart Widget - Apple Vision */
+        .cart-widget {
+            width: 100%;
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.12),
+                        inset 0 1px 0 0 rgba(255,255,255,0.9);
+            border: 1px solid #f1f1f3;
+        }
+        
+        .cart-widget-header {
+            background: linear-gradient(135deg, #111827, #1f2937);
+            color: white;
+            padding: 24px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .cart-widget-title {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.4px;
+        }
+        
+        .cart-item-pill {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(12px);
+            padding: 6px 18px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 24px 28px;
+            gap: 24px;
+            border-bottom: 1px solid #f3f4f6;
+            transition: all 0.2s;
+        }
+        
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-image {
+            width: 72px;
+            height: 72px;
+            object-fit: cover;
+            border-radius: 16px;
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1);
+        }
+        
+        .item-details {
+            flex: 1;
+        }
+        
+        .item-name {
+            font-weight: 600;
+            font-size: 17px;
+            line-height: 1.3;
+        }
+        
+        .item-price {
+            color: #6b7280;
+            font-size: 14.5px;
+        }
+        
+        .qty-wrap {
+            display: flex;
+            align-items: center;
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 9999px;
+            padding: 4px;
+        }
+        
+        .qty-btn {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 500;
+            border: none;
+            background: white;
+            border-radius: 9999px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.2s;
+        }
+        
+        .qty-btn:hover {
+            background: #f1f5f9;
+        }
+        
+        .qty-num {
+            font-weight: 700;
+            font-size: 18px;
+            min-width: 32px;
+            text-align: center;
+            color: #111827;
+        }
+        
+        .remove-item-btn {
+            color: #ef4444;
+            font-size: 22px;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px;
+            transition: all 0.2s;
+        }
+        
+        .remove-item-btn:hover {
+            background: #fee2e2;
+        }
+        
+        .cart-footer {
+            padding: 24px 28px;
+            background: #f8fafc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .total {
+            font-size: 21px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .checkout-btn {
+            background: #10b981;
+            color: white;
+            padding: 14px 36px;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.25s;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+        }
+        
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(17, 24, 39, 0.95);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 9999px;
+            font-size: 15px;
+            font-weight: 500;
+            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.3);
+            backdrop-filter: blur(16px);
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-12px);
+        }
+    </style>
+</head>
+<body class="bg-zinc-100">
+    <div class="chat-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <i class="fa-solid fa-bag-shopping text-3xl"></i>
+                <span>ShopBot</span>
+            </div>
+            <div onclick="window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'})" 
+                 class="cart-icon flex items-center gap-2 text-xl">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span id="cart-count" class="badge">0</span>
+            </div>
+        </div>
+
+        <!-- Messages -->
+        <div id="messages" class="messages"></div>
+
+        <!-- Input -->
+        <div class="input-area flex gap-3">
+            <input type="text" id="user-input" 
+                   class="flex-1 bg-white border border-zinc-200 rounded-3xl px-6 py-4 text-base focus:ring-2 focus:ring-blue-500"
+                   placeholder="Add a white shirt...">
+            <button id="send-btn">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
