@@ -1,3 +1,103 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Domine:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --primary: #FAC638;
+  --black: #000000;
+  --white: #FFFFFF;
+  --bg: #f8f8f5;
+  --border: 3px solid #000;
+  --shadow: 4px 4px 0px 0px #000;
+  --shadow-lg: 8px 8px 0px 0px #000;
+}
+
+html, body {
+  min-height: 100vh;
+  background-color: var(--bg);
+  background-image: radial-gradient(#000 0.5px, transparent 0.5px);
+  background-size: 12px 12px;
+  font-family: 'Domine', serif;
+}
+
+.brutalist-card {
+  border: var(--border);
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+.brutalist-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translate(-2px, -2px);
+}
+
+.btn-primary {
+  background: var(--primary);
+  border: var(--border);
+  box-shadow: var(--shadow);
+  font-family: 'Archivo Black', sans-serif;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: box-shadow 0.1s, transform 0.1s;
+}
+.btn-primary:active {
+  box-shadow: none;
+  transform: translate(4px, 4px);
+}
+
+.btn-secondary {
+  background: var(--white);
+  border: var(--border);
+  box-shadow: var(--shadow);
+  font-family: 'Archivo Black', sans-serif;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: box-shadow 0.1s, transform 0.1s;
+}
+.btn-secondary:active {
+  box-shadow: none;
+  transform: translate(4px, 4px);
+}
+
+.heading {
+  font-family: 'Archivo Black', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.msg-in { animation: slideUp 0.25s ease forwards; }
+.dot-blink  { animation: blink 1s step-start infinite; }
+.dot-blink-2 { animation: blink 1s step-start 0.33s infinite; }
+.dot-blink-3 { animation: blink 1s step-start 0.66s infinite; }
+
+::-webkit-scrollbar { height: 6px; width: 6px; }
+::-webkit-scrollbar-track { background: #f0f0ec; border: 1px solid #000; }
+::-webkit-scrollbar-thumb { background: #000; }

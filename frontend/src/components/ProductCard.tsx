@@ -19,84 +19,205 @@ export function ProductCard(props: ProductProps) {
   const {
     name, price, original_price, description, image_url,
     product_url, product_id, onAddToCart,
-    rating = 0, review_count = 0, badge
+    rating = 0, review_count = 0, badge,
   } = props;
 
+  const [qty, setQty] = useState(1);
   const [status, setStatus] = useState<'idle' | 'loading' | 'added'>('idle');
   const discount = original_price ? Math.round((1 - price / original_price) * 100) : null;
 
   const handleAdd = async () => {
     setStatus('loading');
-    onAddToCart(product_id, name, price);
+    onAddToCart(product_id, name, price * qty);
     await new Promise(r => setTimeout(r, 800));
     setStatus('added');
+    setTimeout(() => setStatus('idle'), 2500);
   };
 
   const stars = Array.from({ length: 5 }, (_, i) => (
-    <span key={i} className={i < Math.floor(rating) ? 'text-amber-400' : 'text-gray-300'}>★</span>
+    <span key={i} style={{ color: i < Math.floor(rating) ? '#FAC638' : '#ccc', fontSize: 14 }}>★</span>
   ));
 
   return (
-    <div className="relative flex flex-col rounded-2xl overflow-hidden bg-white border border-gray-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-      style={{ minWidth: '220px', maxWidth: '240px' }}>
-
-      {badge && (
-        <div className="absolute top-3 left-3 z-10 px-2 py-1 rounded-full text-xs font-bold"
-          style={{
-            background: badge === 'Best Seller' ? '#e94560' : badge === 'Sale' ? '#f59e0b' : '#10b981',
-            color: 'white'
-          }}>
-          {badge}
-        </div>
-      )}
-
-      {discount && (
-        <div className="absolute top-3 right-3 z-10 px-2 py-1 rounded-full bg-emerald-500 text-white text-xs font-bold">
-          -{discount}%
-        </div>
-      )}
-
-      <div className="relative overflow-hidden bg-gray-50" style={{ height: '160px' }}>
+    <div style={{
+      width: 240,
+      flexShrink: 0,
+      background: '#fff',
+      border: '3px solid #000',
+      boxShadow: '6px 6px 0px 0px #000',
+      display: 'flex',
+      flexDirection: 'column',
+      transition: 'box-shadow 0.15s, transform 0.15s',
+      fontFamily: 'Domine, serif',
+    }}
+      onMouseEnter={e => {
+        (e.currentTarget as HTMLDivElement).style.boxShadow = '10px 10px 0px 0px #000';
+        (e.currentTarget as HTMLDivElement).style.transform = 'translate(-2px, -2px)';
+      }}
+      onMouseLeave={e => {
+        (e.currentTarget as HTMLDivElement).style.boxShadow = '6px 6px 0px 0px #000';
+        (e.currentTarget as HTMLDivElement).style.transform = 'translate(0,0)';
+      }}
+    >
+      {/* Image */}
+      <div style={{ position: 'relative', height: 180, borderBottom: '3px solid #000', overflow: 'hidden', background: '#f0f0ec' }}>
         <img
           src={image_url}
           alt={name}
-          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-          onError={e => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/240x160?text=Product'; }}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'grayscale(20%) contrast(110%)', transition: 'transform 0.4s' }}
+          onError={e => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/240x180?text=Product'; }}
+          onMouseEnter={e => { (e.target as HTMLImageElement).style.transform = 'scale(1.06)'; }}
+          onMouseLeave={e => { (e.target as HTMLImageElement).style.transform = 'scale(1)'; }}
         />
+
+        {badge && (
+          <div style={{
+            position: 'absolute', top: 0, left: 0,
+            background: badge === 'Best Seller' ? '#FAC638' : badge === 'Sale' ? '#000' : '#FAC638',
+            color: badge === 'Sale' ? '#FAC638' : '#000',
+            borderRight: '3px solid #000', borderBottom: '3px solid #000',
+            padding: '4px 10px',
+            fontSize: 10,
+            fontFamily: 'Archivo Black, sans-serif',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+          }}>
+            {badge}
+          </div>
+        )}
+
+        {discount && (
+          <div style={{
+            position: 'absolute', top: 0, right: 0,
+            background: '#000',
+            color: '#FAC638',
+            borderLeft: '3px solid #000', borderBottom: '3px solid #000',
+            padding: '4px 10px',
+            fontSize: 10,
+            fontFamily: 'Archivo Black, sans-serif',
+          }}>
+            -{discount}%
+          </div>
+        )}
       </div>
 
-      <div className="flex flex-col flex-1 p-4 gap-2">
-        <h3 className="font-bold text-gray-900 text-sm leading-tight">{name}</h3>
-        <p className="text-gray-500 text-xs leading-relaxed">{description}</p>
+      {/* Body */}
+      <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', flex: 1, gap: 8 }}>
+        <h3 style={{
+          fontFamily: 'Archivo Black, sans-serif',
+          fontSize: 14, textTransform: 'uppercase',
+          letterSpacing: '-0.02em', lineHeight: 1.25,
+        }}>
+          {name}
+        </h3>
+        <p style={{ fontSize: 12, color: '#555', lineHeight: 1.5 }}>{description}</p>
 
-        <div className="flex items-center gap-1">
-          <div className="flex text-sm">{stars}</div>
-          <span className="text-gray-400 text-xs">({(review_count ?? 0).toLocaleString()})</span>
+        {/* Stars */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <div style={{ display: 'flex' }}>{stars}</div>
+          <span style={{ fontSize: 11, color: '#777' }}>({(review_count ?? 0).toLocaleString()})</span>
         </div>
 
-        <div className="flex items-baseline gap-2 mt-auto">
-          <span className="text-xl font-black text-gray-900">${(price ?? 0).toFixed(2)}</span>
+        {/* Price */}
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginTop: 'auto' }}>
+          <span style={{ fontFamily: 'Archivo Black, sans-serif', fontSize: 22, letterSpacing: '-0.03em' }}>
+            ${(price ?? 0).toFixed(2)}
+          </span>
           {original_price && (
-            <span className="text-sm text-gray-400 line-through">${original_price.toFixed(2)}</span>
+            <span style={{ fontSize: 13, color: '#999', textDecoration: 'line-through' }}>
+              ${original_price.toFixed(2)}
+            </span>
           )}
         </div>
 
-        <div className="flex gap-2 mt-2">
-          <a href={product_url} target="_blank" rel="noopener noreferrer"
-            className="flex-1 text-center py-2 text-xs font-semibold rounded-xl border border-gray-200 text-gray-600 hover:border-gray-400 transition-colors">
-            View
-          </a>
-          <button onClick={handleAdd} disabled={status !== 'idle'}
-            className="flex-1 py-2 text-xs font-bold rounded-xl text-white transition-all duration-300"
-            style={{
-              background: status === 'added'
-                ? 'linear-gradient(135deg, #10b981, #059669)'
-                : status === 'loading' ? '#9ca3af'
-                : 'linear-gradient(135deg, #6366f1, #4f46e5)',
+        {/* Qty + Add */}
+        <div style={{ display: 'flex', marginTop: 8, borderTop: '3px solid #000', paddingTop: 12, gap: 8, alignItems: 'center' }}>
+          {/* Qty control */}
+          <div style={{ display: 'flex', border: '3px solid #000', alignItems: 'center', background: '#fff' }}>
+            <button
+              onClick={() => setQty(q => Math.max(1, q - 1))}
+              style={{
+                width: 32, height: 32,
+                background: 'transparent', border: 'none',
+                borderRight: '3px solid #000',
+                cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontFamily: 'Archivo Black, sans-serif',
+                fontSize: 16,
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = '#FAC638'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
+            >
+              −
+            </button>
+            <span style={{
+              width: 28, textAlign: 'center',
+              fontFamily: 'Archivo Black, sans-serif',
+              fontSize: 14,
             }}>
-            {status === 'added' ? '✓ Added' : status === 'loading' ? '...' : 'Add to Cart'}
+              {qty}
+            </span>
+            <button
+              onClick={() => setQty(q => q + 1)}
+              style={{
+                width: 32, height: 32,
+                background: 'transparent', border: 'none',
+                borderLeft: '3px solid #000',
+                cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontFamily: 'Archivo Black, sans-serif',
+                fontSize: 16,
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = '#FAC638'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
+            >
+              +
+            </button>
+          </div>
+
+          {/* Add to cart button */}
+          <button
+            onClick={handleAdd}
+            disabled={status !== 'idle'}
+            style={{
+              flex: 1,
+              height: 38,
+              border: '3px solid #000',
+              boxShadow: status === 'idle' ? '3px 3px 0 #000' : 'none',
+              background: status === 'added' ? '#000' : '#FAC638',
+              color: status === 'added' ? '#FAC638' : '#000',
+              fontFamily: 'Archivo Black, sans-serif',
+              fontSize: 11,
+              textTransform: 'uppercase',
+              cursor: status !== 'idle' ? 'default' : 'pointer',
+              transition: 'all 0.15s',
+              transform: status === 'idle' ? 'translate(0,0)' : 'translate(3px, 3px)',
+            }}
+          >
+            {status === 'added' ? '✓ ADDED' : status === 'loading' ? '...' : 'ADD TO CART'}
           </button>
         </div>
+
+        {/* View link */}
+        <a href={product_url} target="_blank" rel="noopener noreferrer"
+          style={{
+            display: 'block', textAlign: 'center',
+            padding: '7px',
+            border: '2px solid #000',
+            fontSize: 11,
+            fontFamily: 'Archivo Black, sans-serif',
+            textTransform: 'uppercase',
+            textDecoration: 'none',
+            color: '#000',
+            letterSpacing: '0.05em',
+            background: 'transparent',
+            transition: 'background 0.15s',
+          }}
+          onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#f0f0ec'; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'; }}
+        >
+          View Details ↗
+        </a>
       </div>
     </div>
   );
