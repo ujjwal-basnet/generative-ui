@@ -56,12 +56,7 @@ uv sync
 
 ### 3. Add your API key
 
-```bash
-# For the LangGraph + Next.js implementation
-echo "OPENAI_API_KEY=sk-your-key-here" > backend/.env
-
-# For the tool_ui_chatbot implementation
-echo "GOOGLE_API_KEY=your-key-here" > tool_ui_chatbot/.env
+```export OPENAI_API_KEY='your-api-key-here'
 ```
 
 ### 4. Run the backend
