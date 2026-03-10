@@ -8,9 +8,21 @@ dependencies = [
     "fastapi",
     "uvicorn",
     "pydantic",
-    "requests"
+    "requests",
+    "pydantic-ai>=1.67.0",
+    "jinja2>=3.1.6",
+    "langchain-google-genai>=4.2.1",
+    "langchain-core>=1.2.17",
+    "langchain>=1.2.10",
+    "dotenv>=0.9.9",
+    "langgraph>=1.0.10",
+    "langchain-openai>=1.1.10",
 ]
 
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
+
+# Explicitly include packages
+[tool.setuptools]
+packages = ["tool_ui_chatbot", "backend", "frontend"]
