@@ -80,6 +80,7 @@ async function callBot(text) {
         if (data.text) addBubble(data.text, 'bot');
         if (data.cart_data) renderCartWidget(data.cart_data);
         if (typeof data.cart_count === 'number') updateBadge(data.cart_count);
+        if (data.products) renderProductGrid(data.products); // <-- products grid
     } catch (err) {
         hideTyping();
         addBubble("⚠️ Oops, connection issue. Try again.", 'bot');
@@ -88,6 +89,7 @@ async function callBot(text) {
         userInput.focus();
     }
 }
+
 
 function renderCartWidget(cartData) {
     const row = document.createElement('div');
@@ -205,3 +207,61 @@ window.addEventListener('load', () => {
     updateBadge(0);
     userInput.focus();
 });
+
+
+// --- Render products in chat messages ---
+function renderProductGrid(products) {
+    const row = document.createElement('div');
+    row.className = 'msg-row bot';
+    
+    const grid = document.createElement('div');
+    grid.className = 'grid grid-cols-2 gap-4 p-2';
+
+    products.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-xl shadow-md p-3 flex flex-col items-center gap-2';
+        card.dataset.productName = product.name;
+        card.dataset.qty = 0;
+
+        card.innerHTML = `
+            <img src="${product.image}" class="w-full h-32 object-cover rounded-xl">
+            <div class="font-semibold text-base">${product.name}</div>
+            <div class="text-gray-600">$${product.price.toFixed(2)}</div>
+            <div class="flex gap-2 mt-2">
+                <button class="qty-btn" data-dir="-1">–</button>
+                <span class="qty-num">0</span>
+                <button class="qty-btn" data-dir="1">+</button>
+            </div>
+            <button class="remove-item-btn mt-2 hidden"><i class="fa-solid fa-xmark"></i></button>
+        `;
+
+        const qtyNum = card.querySelector('.qty-num');
+        const removeBtn = card.querySelector('.remove-item-btn');
+
+        // Quantity buttons
+        card.querySelectorAll('.qty-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                let current = parseInt(qtyNum.textContent);
+                const dir = parseInt(btn.dataset.dir);
+                const newQty = Math.max(0, current + dir);
+                qtyNum.textContent = newQty;
+                removeBtn.classList.toggle('hidden', newQty === 0);
+
+                await uiCartAction(newQty === 0 ? 'remove' : 'update', product.name, newQty, card);
+            });
+        });
+
+        // Remove button
+        removeBtn.addEventListener('click', async () => {
+            qtyNum.textContent = 0;
+            removeBtn.classList.add('hidden');
+            await uiCartAction('remove', product.name, 0, card);
+        });
+
+        grid.appendChild(card);
+    });
+
+    row.appendChild(grid);
+    messagesEl.appendChild(row);
+    messagesEl.scrollTo({ top: messagesEl.scrollHeight, behavior: 'smooth' });
+}
