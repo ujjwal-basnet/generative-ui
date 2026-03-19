@@ -24,9 +24,10 @@ Instead of listing products as text, it renders interactive product cards with A
 
 | Folder | Stack | Status |
 |--------|-------|--------|
-| `backend/` + `frontend/` | LangGraph + LangChain + Next.js (SSE) | ✅ Done |
-| `tool_ui_chatbot/` | LangChain + Gemini + FastAPI | 🔜 working |
-| `copilot-ui/` | CopilotKit + LangChain | 🔜 working |
+| `curator_app/` | **FastAPI + Vanilla JS (Curator Design System)** | **New** |
+| `backend/` + `frontend/` | LangGraph + LangChain + Next.js (SSE) | Done |
+| `tool_ui_chatbot/` | LangChain + Gemini + FastAPI | Working |
+| `copilot-ui/` | CopilotKit + LangChain | Working |
 
 ---
 
@@ -57,25 +58,43 @@ uv sync
 ### 3. Add your API key
 
 ```bash
-# For the LangGraph + Next.js implementation
-echo "OPENAI_API_KEY=sk-your-key-here" > backend/.env
-
-# For the tool_ui_chatbot implementation
-echo "GOOGLE_API_KEY=your-key-here" > tool_ui_chatbot/.env
+# Create .env in the repo root (used by all implementations)
+echo "OPENROUTER_API_KEY=sk-or-your-key-here" > .env
 ```
 
-### 4. Run the backend
+> All implementations use [OpenRouter](https://openrouter.ai/) for LLM access (free models available).
+
+---
+
+## Quick Start: Curator App (Recommended)
+
+The cleanest generative UI demo — FastAPI backend serving a single HTML page with the Curator design system. No React/Node.js needed.
 
 ```bash
-# Using uv (no manual activation needed)
-uv run uvicorn backend.main:app --reload --port 8000
-
-# Or activate the venv first
-source .venv/bin/activate
-uvicorn backend.main:app --reload --port 8000
+# From the repo root
+cd curator_app
+uv run uvicorn app:app --reload --port 8000
 ```
 
-### 5. Run the frontend (Next.js only)
+Open **http://localhost:8000**
+
+Features:
+- Real generative UI — LLM tool calls render interactive product cards and cart widgets
+- No page refreshes — all interactions via fetch() and DOM manipulation
+- Curator design system — Material Design tokens, Manrope/Inter typography
+- Interactive cart — add, remove, update quantities directly in chat
+
+---
+
+## Alternative: LangGraph + Next.js (SSE Streaming)
+
+### Run the backend
+
+```bash
+uv run uvicorn backend.main:app --reload --port 8000
+```
+
+### Run the frontend
 
 ```bash
 cd frontend

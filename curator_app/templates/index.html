@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Curator — Generative UI</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "on-background": "#2b3437",
+        "secondary-fixed": "#dce2f3",
+        "surface-variant": "#dbe4e7",
+        "surface-container-lowest": "#ffffff",
+        "surface-dim": "#d1dce0",
+        "primary-container": "#dce2f7",
+        "on-tertiary-container": "#47445f",
+        "inverse-on-surface": "#9b9d9e",
+        "on-primary": "#f7f7ff",
+        "primary-fixed-dim": "#ced4e9",
+        "outline": "#737c7f",
+        "background": "#f8f9fa",
+        "tertiary-container": "#d3ceef",
+        "secondary-fixed-dim": "#ced4e4",
+        "surface-container-highest": "#dbe4e7",
+        "secondary-container": "#dce2f3",
+        "inverse-primary": "#d9dff5",
+        "outline-variant": "#abb3b7",
+        "on-secondary": "#f8f8ff",
+        "on-primary-container": "#4b5263",
+        "inverse-surface": "#0c0f10",
+        "secondary": "#585f6d",
+        "primary-fixed": "#dce2f7",
+        "on-error": "#fff7f6",
+        "on-tertiary": "#fcf7ff",
+        "on-error-container": "#752121",
+        "on-tertiary-fixed-variant": "#514d69",
+        "on-surface": "#2b3437",
+        "error-container": "#fe8983",
+        "on-surface-variant": "#586064",
+        "primary-dim": "#4b5264",
+        "surface-tint": "#575e70",
+        "secondary-dim": "#4c5361",
+        "surface-container": "#eaeff1",
+        "surface-container-low": "#f1f4f6",
+        "tertiary-dim": "#53506b",
+        "surface-bright": "#f8f9fa",
+        "surface": "#f8f9fa",
+        "on-secondary-fixed": "#39404c",
+        "on-secondary-container": "#4b525f",
+        "tertiary-fixed-dim": "#c5c0e0",
+        "on-primary-fixed": "#383f50",
+        "on-primary-fixed-variant": "#545b6d",
+        "on-secondary-fixed-variant": "#555c69",
+        "primary": "#575e70",
+        "tertiary": "#5f5c78",
+        "on-tertiary-fixed": "#34314b",
+        "error-dim": "#4e0309",
+        "tertiary-fixed": "#d3ceef",
+        "error": "#9f403d",
+        "surface-container-high": "#e2e9ec"
+      },
+      fontFamily: {
+        "headline": ["Manrope"],
+        "body": ["Inter"],
+        "label": ["Inter"]
+      },
+      borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+    },
+  },
+}
+</script>
+<style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    font-size: 20px;
+  }
+  body {
+    background-color: #f8f9fa;
+    color: #2b3437;
+    font-family: 'Inter', sans-serif;
+  }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  @keyframes pulse-dot {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+  .typing-dot { animation: pulse-dot 1.4s infinite ease-in-out both; }
+  .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+  .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+  .typing-dot:nth-child(3) { animation-delay: 0s; }
+</style>
+</head>
+<body class="bg-surface text-on-surface antialiased min-h-screen flex flex-col">
+
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl shadow-sm">
+  <div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-2xl mx-auto">
+    <div class="font-headline font-bold tracking-tighter text-xl text-gray-900">CURATOR</div>
+    <nav class="hidden md:flex items-center space-x-8 font-headline font-medium tracking-tight text-sm">
+      <a class="text-gray-500 hover:text-gray-900 transition-colors" href="#">Collections</a>
+      <a class="text-gray-500 hover:text-gray-900 transition-colors" href="#">Editorial</a>
+      <a class="text-gray-500 hover:text-gray-900 transition-colors" href="#">Artisans</a>
+      <a class="text-gray-900 border-b border-gray-900 pb-1" href="#">Chat</a>
+    </nav>
+    <div class="flex items-center space-x-5 text-gray-700">
+      <button id="cart-icon-btn" class="relative active:scale-95 transition-transform">
+        <span class="material-symbols-outlined">shopping_bag</span>
+        <span id="cart-badge" class="hidden absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-on-primary">0</span>
+      </button>
+      <button class="active:scale-95 transition-transform"><span class="material-symbols-outlined">person</span></button>
+    </div>
+  </div>
+  <div class="bg-gray-100 h-px w-full"></div>
+</header>
+
+<!-- Chat Canvas -->
+<main class="flex-grow pt-24 pb-36 px-4 md:px-6 max-w-4xl mx-auto w-full flex flex-col">
+  <!-- Header Metadata -->
+  <div class="mb-12 text-center">
+    <span class="font-headline text-[10px] uppercase tracking-[0.2em] text-on-surface-variant font-bold">Lumiere Noir Concierge</span>
+    <h1 class="font-headline text-2xl font-light tracking-tight mt-2 text-on-surface">Curated Assistant</h1>
+  </div>
+
+  <!-- Conversation History -->
+  <div id="chat-history" class="flex-1 space-y-10">
+    <!-- Messages will be inserted here by JS -->
+  </div>
+</main>
+
+<!-- Chat Input Area -->
+<div class="fixed bottom-0 left-0 w-full z-40">
+  <div class="max-w-4xl mx-auto px-4 md:px-6 pb-8 pt-4 bg-gradient-to-t from-surface via-surface to-transparent">
+    <form id="chat-form" class="relative group">
+      <input
+        id="chat-input"
+        class="w-full bg-surface-container-lowest border-none py-4 px-6 pr-24 rounded-xl font-headline text-sm tracking-tight text-on-surface focus:ring-0 shadow-[0_4px_24px_rgba(0,0,0,0.04)] transition-all placeholder:text-outline-variant/50"
+        placeholder="Ask Curator anything..."
+        type="text"
+        autocomplete="off"
+      />
+      <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center space-x-3">
+        <button type="button" class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+          <span class="material-symbols-outlined text-xl">attach_file</span>
+        </button>
+        <button type="submit" id="send-btn" class="p-2 bg-primary text-on-primary rounded-lg active:scale-90 transition-transform shadow-md">
+          <span class="material-symbols-outlined text-xl">arrow_upward</span>
+        </button>
+      </div>
+    </form>
+    <div class="mt-3 flex justify-center">
+      <p class="font-label text-[10px] text-on-surface-variant/60 tracking-tight">Our artisans respond within minutes.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Navigation Bar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/90 backdrop-blur-lg border-t border-gray-100 shadow-[0_-4px_20px_0_rgba(0,0,0,0.03)] z-50">
+  <a class="flex flex-col items-center text-gray-400 hover:text-gray-600" href="#">
+    <span class="material-symbols-outlined">storefront</span>
+    <span class="font-headline text-[10px] uppercase tracking-widest font-bold mt-1">Shop</span>
+  </a>
+  <a class="flex flex-col items-center text-gray-400 hover:text-gray-600" href="#">
+    <span class="material-symbols-outlined">auto_stories</span>
+    <span class="font-headline text-[10px] uppercase tracking-widest font-bold mt-1">Curated</span>
+  </a>
+  <a class="flex flex-col items-center text-gray-400 hover:text-gray-600" href="#">
+    <span class="material-symbols-outlined">brush</span>
+    <span class="font-headline text-[10px] uppercase tracking-widest font-bold mt-1">Makers</span>
+  </a>
+  <a class="flex flex-col items-center text-gray-900 scale-110" href="#">
+    <span class="material-symbols-outlined">chat_bubble</span>
+    <span class="font-headline text-[10px] uppercase tracking-widest font-bold mt-1">Messages</span>
+  </a>
+</nav>
+
+<script src="/static/js/main.js"></script>
+</body>
+</html>
