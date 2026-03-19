@@ -25,4 +25,4 @@ build-backend = "setuptools.build_meta"
 
 # Explicitly include packages
 [tool.setuptools]
-packages = ["tool_ui_chatbot", "backend", "frontend"]
+packages = ["tool_ui_chatbot", "backend", "frontend", "curator_app"]
