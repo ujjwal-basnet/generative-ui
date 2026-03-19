@@ -15,50 +15,103 @@ export function WeatherCard(props: WeatherProps) {
   const { location, temperature, weather, feels_like, humidity, wind_speed, icon } = props;
 
   return (
-    <div className="relative overflow-hidden rounded-2xl p-6 min-w-[280px]"
-      style={{
-        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-        boxShadow: '0 20px 60px rgba(0,0,0,0.4)',
+    <div style={{
+      background: '#fff',
+      border: '3px solid #000',
+      boxShadow: '6px 6px 0px 0px #000',
+      minWidth: 300,
+      maxWidth: 360,
+      fontFamily: 'Domine, serif',
+      overflow: 'hidden',
+    }}>
+      {/* Top bar */}
+      <div style={{
+        background: '#000',
+        padding: '10px 18px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
       }}>
-      {/* Background decoration */}
-      <div className="absolute top-0 right-0 w-40 h-40 rounded-full opacity-10"
-        style={{ background: 'radial-gradient(circle, #e94560, transparent)', transform: 'translate(30%, -30%)' }} />
-
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4">
-        <div>
-          <p className="text-blue-300 text-xs font-semibold uppercase tracking-widest mb-1">Current Weather</p>
-          <h2 className="text-white text-xl font-bold">{location}</h2>
-        </div>
-        <span className="text-4xl">{icon}</span>
+        <span className="material-symbols-outlined" style={{ color: '#FAC638', fontSize: 18, fontVariationSettings: "'FILL' 1" }}>location_on</span>
+        <span style={{
+          fontFamily: 'Archivo Black, sans-serif',
+          textTransform: 'uppercase',
+          fontSize: 11,
+          letterSpacing: '0.1em',
+          color: '#FAC638',
+        }}>
+          Current Weather
+        </span>
       </div>
 
-      {/* Main temperature */}
-      <div className="mb-4">
-        <div className="flex items-end gap-2">
-          <span className="text-white font-black" style={{ fontSize: '4rem', lineHeight: 1 }}>
+      {/* Main content */}
+      <div style={{ padding: '20px 22px' }}>
+        {/* Location + icon */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 12 }}>
+          <h2 style={{
+            fontFamily: 'Archivo Black, sans-serif',
+            textTransform: 'uppercase',
+            fontSize: 20,
+            letterSpacing: '-0.02em',
+            lineHeight: 1.1,
+          }}>
+            {location}
+          </h2>
+          <span style={{ fontSize: 48, lineHeight: 1, marginTop: -4 }}>{icon}</span>
+        </div>
+
+        {/* Big temperature */}
+        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 6 }}>
+          <span style={{
+            fontFamily: 'Archivo Black, sans-serif',
+            fontSize: 72,
+            letterSpacing: '-0.04em',
+            lineHeight: 1,
+          }}>
             {Math.round(temperature)}
           </span>
-          <span className="text-blue-200 text-2xl font-light mb-2">°C</span>
+          <span style={{ fontSize: 28, fontFamily: 'Archivo Black, sans-serif', marginBottom: 10, color: '#555' }}>°C</span>
         </div>
-        <p className="text-blue-200 text-base font-medium">{weather}</p>
-      </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-white/10">
-        <StatPill label="Feels like" value={`${Math.round(feels_like)}°C`} />
-        <StatPill label="Humidity" value={`${humidity}%`} />
-        <StatPill label="Wind" value={`${wind_speed} km/h`} />
-      </div>
-    </div>
-  );
-}
+        <p style={{
+          fontFamily: 'Archivo Black, sans-serif',
+          textTransform: 'uppercase',
+          fontSize: 13,
+          letterSpacing: '0.05em',
+          color: '#333',
+          marginBottom: 20,
+        }}>
+          {weather}
+        </p>
 
-function StatPill({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="text-center">
-      <p className="text-blue-400 text-xs mb-1">{label}</p>
-      <p className="text-white text-sm font-semibold">{value}</p>
+        {/* Stats grid */}
+        <div style={{
+          borderTop: '3px solid #000',
+          paddingTop: 16,
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr 1fr',
+          gap: 0,
+        }}>
+          {[
+            { label: 'Feels Like', value: `${Math.round(feels_like)}°C` },
+            { label: 'Humidity', value: `${humidity}%` },
+            { label: 'Wind', value: `${wind_speed} km/h` },
+          ].map((stat, i) => (
+            <div key={stat.label} style={{
+              textAlign: 'center',
+              padding: '12px 8px',
+              borderLeft: i > 0 ? '3px solid #000' : 'none',
+            }}>
+              <p style={{ fontSize: 10, fontFamily: 'Archivo Black, sans-serif', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#777', marginBottom: 4 }}>
+                {stat.label}
+              </p>
+              <p style={{ fontFamily: 'Archivo Black, sans-serif', fontSize: 16 }}>
+                {stat.value}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

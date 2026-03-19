@@ -23,18 +23,51 @@ type ProductListProps = {
 export function ProductList({ products, onAddToCart }: ProductListProps) {
   if (!products || products.length === 0) {
     return (
-      <div className="py-4 text-gray-400 text-sm">No products found for that search.</div>
+      <div style={{
+        border: '3px solid #000',
+        boxShadow: '4px 4px 0 #000',
+        background: '#fff',
+        padding: '20px 24px',
+        fontFamily: 'Domine, serif',
+        color: '#555',
+      }}>
+        No products found for that search.
+      </div>
     );
   }
 
   return (
     <div>
-      <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
-        {products.length} result{products.length > 1 ? 's' : ''} found
-      </p>
-      <div className="flex gap-3 overflow-x-auto pb-3" style={{ scrollSnapType: 'x mandatory' }}>
+      {/* Header label */}
+      <div style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 8,
+        background: '#000',
+        color: '#FAC638',
+        padding: '6px 14px',
+        marginBottom: 16,
+        fontFamily: 'Archivo Black, sans-serif',
+        textTransform: 'uppercase',
+        fontSize: 11,
+        letterSpacing: '0.08em',
+        border: '3px solid #000',
+      }}>
+        <span className="material-symbols-outlined" style={{ fontSize: 16, fontVariationSettings: "'FILL' 1" }}>shopping_bag</span>
+        {products.length} RESULT{products.length > 1 ? 'S' : ''} FOUND
+      </div>
+
+      {/* Horizontal scroll container */}
+      <div style={{
+        display: 'flex',
+        gap: 16,
+        overflowX: 'auto',
+        paddingBottom: 12,
+        scrollSnapType: 'x mandatory',
+        WebkitOverflowScrolling: 'touch',
+      }}>
         {products.map((prod) => (
-          <div key={prod.product_id} style={{ scrollSnapAlign: 'start' }}>
+          <div key={prod.product_id} style={{ scrollSnapAlign: 'start', flexShrink: 0 }}>
             <ProductCard {...prod} onAddToCart={onAddToCart} />
           </div>
         ))}
