@@ -72,8 +72,7 @@ The cleanest generative UI demo — FastAPI backend serving a single HTML page w
 
 ```bash
 # From the repo root
-cd curator_app
-uv run uvicorn app:app --reload --port 8000
+uv run uvicorn curator_app.app:app --reload --port 8000
 ```
 
 Open **http://localhost:8000**
